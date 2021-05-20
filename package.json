@@ -1,0 +1,12 @@
+{
+  "name": "create-user-to-server-token",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Static website to generate user-to-server tokens scoped to a GitHub App's installations and permissions",
+  "keywords": [],
+  "author": "Gregor Martynus (https://twitter.com/gr2m)",
+  "license": "ISC",
+  "dependencies": {
+    "@octokit/oauth-methods": "^1.2.3"
+  }
+}
