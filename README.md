@@ -1,5 +1,3 @@
-# This repository is work in progress: [#1](https://github.com/gr2m/create-user-to-server-token/pull/1)
-
 # create-user-to-server-token
 
 > static website to generate user-to-server tokens scoped to a GitHub App's installations and permissions
