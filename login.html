@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      crossorigin="anonymous"
+      media="all"
+      integrity="sha512-LIOdgMPCoEgaBOBpRHSdzMIXC0BQl+3B20hYRhyoDICAcS6GTJ4jRrobBZhDZWO4VGNzMZ56U9kllzZzrsc34Q=="
+      rel="stylesheet"
+      href="https://github.githubassets.com/assets/frameworks-2c839d80c3c2a0481a04e06944749dcc.css"
+    />
+    <link
+      crossorigin="anonymous"
+      media="all"
+      integrity="sha512-Vck3FoFTQOe/kRaEwxK0R7TLUfeq0weuN4BilqJp/oXM6fgop5pJEAzxXtdualHggdTrgHD94FKed9rroUEnRg=="
+      rel="stylesheet"
+      href="https://github.githubassets.com/assets/behaviors-55c93716815340e7bf911684c312b447.css"
+    />
+    <link
+      crossorigin="anonymous"
+      media="all"
+      integrity="sha512-q5Ac3m/QtW4pYJoIE1IFL/L2pWEmzPg27qx3FPrJ02gNydn96E5gzupBn5EjF4CuDU0t6qo2oGy/yv5RxpKO+g=="
+      rel="stylesheet"
+      href="https://github.githubassets.com/assets/github-ab901cde6fd0b56e29609a081352052f.css"
+    />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Login</title>
+    <meta
+      name="description"
+      content="GitHub is where people build software. More than 65 million people use GitHub to discover, fork, and contribute to over 200 million projects."
+    />
+
+    <link
+      rel="icon"
+      class="js-site-favicon"
+      type="image/svg+xml"
+      href="https://github.githubassets.com/favicons/favicon.svg"
+    />
+  </head>
+
+  <body
+    class="logged-in env-production page-responsive page-new-repo"
+    style="word-wrap: break-word"
+  >
+    <main id="js-pjax-container" data-pjax-container>
+      <div class="container-md my-6 px-3 px-md-4 px-lg-5">
+        <div class="Subhead hx_Subhead--responsive mb-5">
+          <h1 class="Subhead-heading">Login</h1>
+
+          <div class="Subhead-description">
+            GitHub redirects back to this pack with a <code>?code</code> query
+            parameter, which then can be exchanged for the user-to-server token
+            using the <code>Client ID</code> and
+            <code>Client Secret</code> credentials. The request for the exchange
+            cannot be sent to GitHub directly from browsers due to lack of CORS
+            headers, so we use a small stateless Netlify function to proxy that
+            request.
+          </div>
+        </div>
+
+        <div
+          class="flash mt-3 flash-error"
+          id="error"
+          style="display: none"
+        ></div>
+
+        <div
+          class="flash mt-3 flash-success"
+          id="success"
+          style="display: none"
+        ></div>
+
+        <div class="mt-3 clearfix">
+          <a href="/" class="btn">Create another token</a>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      createToken().then(
+        ({ error, token }) => {
+          if (error) {
+            showError(error);
+            return;
+          }
+
+          const $success = document.querySelector("#success");
+          $success.style.display = "block";
+          $success.innerHTML = `Your user-to-server token is <strong>${token}</strong>`;
+        },
+        (error) => {
+          showError(error.message);
+        }
+      );
+
+      function showError(message) {
+        const $error = document.querySelector("#error");
+        $error.style.display = "block";
+        $error.textContent = message;
+      }
+
+      async function createToken() {
+        const code = new URL(location.href).searchParams.get("code");
+        if (!code)
+          throw new Error(
+            "?code query parameter is missing. Please restart at /"
+          );
+
+        // // remove ?code=... from URL
+        // const path =
+        //   location.pathname +
+        //   location.search
+        //     .replace(/\b(code|state)=\w+/g, "")
+        //     .replace(/[?&]+$/, "");
+        // history.pushState({}, "", path);
+
+        const response = await fetch("/.netlify/functions/oauth", {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            clientId: localStorage.getItem("CLIENT_ID"),
+            clientSecret: localStorage.getItem("CLIENT_SECRET"),
+            code,
+          }),
+        });
+        return response.json();
+      }
+    </script>
+  </body>
+</html>

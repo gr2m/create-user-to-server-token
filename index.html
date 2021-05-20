@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link
+      crossorigin="anonymous"
+      media="all"
+      integrity="sha512-LIOdgMPCoEgaBOBpRHSdzMIXC0BQl+3B20hYRhyoDICAcS6GTJ4jRrobBZhDZWO4VGNzMZ56U9kllzZzrsc34Q=="
+      rel="stylesheet"
+      href="https://github.githubassets.com/assets/frameworks-2c839d80c3c2a0481a04e06944749dcc.css"
+    />
+    <link
+      crossorigin="anonymous"
+      media="all"
+      integrity="sha512-Vck3FoFTQOe/kRaEwxK0R7TLUfeq0weuN4BilqJp/oXM6fgop5pJEAzxXtdualHggdTrgHD94FKed9rroUEnRg=="
+      rel="stylesheet"
+      href="https://github.githubassets.com/assets/behaviors-55c93716815340e7bf911684c312b447.css"
+    />
+    <link
+      crossorigin="anonymous"
+      media="all"
+      integrity="sha512-q5Ac3m/QtW4pYJoIE1IFL/L2pWEmzPg27qx3FPrJ02gNydn96E5gzupBn5EjF4CuDU0t6qo2oGy/yv5RxpKO+g=="
+      rel="stylesheet"
+      href="https://github.githubassets.com/assets/github-ab901cde6fd0b56e29609a081352052f.css"
+    />
+    <meta name="viewport" content="width=device-width" />
+
+    <title>Create a new GitHub user-to-server token</title>
+    <meta
+      name="description"
+      content="GitHub is where people build software. More than 65 million people use GitHub to discover, fork, and contribute to over 200 million projects."
+    />
+
+    <link
+      rel="icon"
+      class="js-site-favicon"
+      type="image/svg+xml"
+      href="https://github.githubassets.com/favicons/favicon.svg"
+    />
+  </head>
+
+  <body
+    class="logged-in env-production page-responsive page-new-repo"
+    style="word-wrap: break-word"
+  >
+    <main id="js-pjax-container" data-pjax-container>
+      <div class="container-md my-6 px-3 px-md-4 px-lg-5">
+        <div class="Subhead hx_Subhead--responsive mb-5">
+          <h1 class="Subhead-heading">
+            Create a new GitHub user-to-server token
+          </h1>
+
+          <div class="Subhead-description">
+            A user-to-server token is the OAuth feature of GitHub Apps. It is a
+            token which permits a GitHub to act on behalf of a user, which means
+            the token is restricted by both: the app's and the user's
+            permissions and accesss. (<a
+              href="https://docs.github.com/en/developers/apps/building-github-apps/identifying-and-authorizing-users-for-github-apps"
+              >learn more</a
+            >)
+          </div>
+        </div>
+
+        <div class="Subhead hx_Subhead--responsive Subhead--spacious mb-0">
+          <h2 class="Subhead-heading f3">Step 1: GitHub App credentials</h2>
+          <div class="Subhead-description">
+            If you haven't yet, register a new app for your account or an
+            organization in settings → Developer settings → GitHub Apps. Uncheck
+            "Expire user authorization tokens" unless you want the token to
+            expire after 8 hours. Deactivate webhooks and set the permissions
+            you want the user-to-server token to inherit.
+          </div>
+        </div>
+
+        <dl class="form-group">
+          <dt class="input-label">
+            <label for="client_id">Client ID:</label>
+          </dt>
+          <dd>
+            <input
+              placeholder="Iv1.234..."
+              aria-describedby="client_id_description"
+              class="form-control"
+              type="text"
+              name="client_id"
+              id="client_id"
+            />
+            <p class="note" id="client_id_description">
+              Enter the Client ID from your GitHub App
+            </p>
+          </dd>
+        </dl>
+
+        <dl class="form-group">
+          <dt class="input-label">
+            <label for="client_secret">Client Secret:</label>
+          </dt>
+          <dd>
+            <input
+              placeholder=""
+              aria-describedby="client_secret_description"
+              class="form-control"
+              type="password"
+              name="client_secret"
+              id="client_secret"
+            />
+            <p class="note" id="client_secret_description">
+              Generate a new client secret and enter it here.
+            </p>
+          </dd>
+        </dl>
+
+        <div class="Subhead hx_Subhead--responsive Subhead--spacious mb-0">
+          <h2 class="Subhead-heading f3">Step 2: Install the app</h2>
+          <div class="Subhead-description">
+            You can install the app on all existing and future repositories, or
+            on a selected set of repositories. The user-to-server token will be
+            restricted to the repositories the app is installed on.
+          </div>
+        </div>
+
+        <h2 class="Subhead-heading f3">Step 3: Create the token</h2>
+
+        <div class="border-top pt-3 clearfix">
+          <a href="#" class="btn btn-primary" id="login_button"
+            >Create user-to-server token</a
+          >
+        </div>
+      </div>
+    </main>
+
+    <script>
+      const $clientId = document.querySelector("#client_id");
+      const $clientSecret = document.querySelector("#client_secret");
+      $clientId.value = localStorage.getItem("CLIENT_ID");
+      $clientSecret.value = localStorage.getItem("CLIENT_SECRET");
+
+      document.querySelector("#login_button").addEventListener("click", login);
+      function login(event) {
+        event.preventDefault();
+
+        const clientId = $clientId.value;
+        const clientSecret = $clientSecret.value;
+
+        localStorage.setItem("CLIENT_ID", clientId);
+        localStorage.setItem("CLIENT_SECRET", clientSecret);
+
+        location.href =
+          "https://github.com/login/oauth/authorize?client_id=" + clientId;
+      }
+    </script>
+  </body>
+</html>
