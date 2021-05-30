@@ -8,5 +8,8 @@
   "license": "ISC",
   "dependencies": {
     "@octokit/oauth-methods": "^1.2.3"
+  },
+  "release": {
+    "branches": ["main"]
   }
 }
